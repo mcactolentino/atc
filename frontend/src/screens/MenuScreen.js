@@ -1,0 +1,47 @@
+import './MenuScreen.css';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+//components
+import Product from '../components/Product';
+
+//ACTIONS
+import { getProducts as listProducts} from '../redux/actions/productActions';
+
+const MenuScreen = () => {
+
+    const dispatch = useDispatch();
+
+    const getProducts = useSelector(state => state.getProducts);
+    const {products, loading, error} = getProducts;
+
+    useEffect(() => {
+        dispatch(listProducts())
+    }, [dispatch]);
+
+    return (
+        <div className="menuscreen">
+            <h2 className="menuscreen__title">Menu</h2>
+            <div className="menuscreen__products">
+            {loading ? (
+          <h2>Loading...</h2>
+        ) : error ? (
+          <h2>{error}</h2>
+        ) : (
+          products.map((product) => (
+            <Product
+              key={product._id}
+              name={product.name}
+              description={product.description}
+              price={product.price}
+              imageUrl={product.imageUrl}
+              productId={product._id}
+            />
+          ))
+        )}
+        </div>
+    </div>
+    );
+};
+
+export default MenuScreen;
